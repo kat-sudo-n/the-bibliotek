@@ -27,7 +27,7 @@ export const columns: ColumnDef<Link>[] = [
             const tags: Tag[] = row.getValue('tags')
 
             return (
-                <div className="flex flex-row gap-1 items-center">
+                <div className="flex flex-wrap gap-1 items-center max-w-75">
                     {tags.map((tag) => (
                         <Badge key={tag.id}>{tag.name} </Badge>
                     ))}
@@ -48,7 +48,9 @@ export const columns: ColumnDef<Link>[] = [
 
             return (
                 <div className="flex flex-row gap-1 items-center">
-                    <span className="mr-5 underline underline-offset-2">{url}</span>
+                    <span className="mr-5 underline underline-offset-2 max-w-50 wrap-break-word overflow-clip">
+                        {url}
+                    </span>
                     <Button onClick={copyUrl}>
                         <Copy />
                     </Button>
