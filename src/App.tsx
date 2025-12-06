@@ -148,7 +148,7 @@ export default function App() {
                         onChange={setForceTagsFilter}
                     />
 
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row flex-wrap gap-2">
                         {tags.map((tag) => {
                             const onTagClick = () => {
                                 if (tagsFilter.includes(tag.id)) {
