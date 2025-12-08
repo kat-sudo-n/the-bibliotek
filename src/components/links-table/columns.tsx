@@ -1,3 +1,4 @@
+import TagBadge from '@/components/custom-ui/tag-badge'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type Link from '@/types/link'
@@ -27,9 +28,9 @@ export const columns: ColumnDef<Link>[] = [
             const tags: Tag[] = row.getValue('tags')
 
             return (
-                <div className="flex flex-wrap gap-1 items-center max-w-75">
+                <div key={row.id} className="flex flex-wrap gap-1 items-center">
                     {tags.map((tag) => (
-                        <Badge key={tag.id}>{tag.name} </Badge>
+                        <TagBadge key={tag.id} tag={tag} />
                     ))}
                 </div>
             )
@@ -42,20 +43,19 @@ export const columns: ColumnDef<Link>[] = [
             const url: string = row.getValue('url')
 
             const copyUrl = async () => {
-                console.log('Copying')
                 await navigator.clipboard.writeText(url)
             }
 
             return (
                 <div className="flex flex-row gap-1 items-center">
-                    <span className="mr-5 underline underline-offset-2 max-w-50 wrap-break-word overflow-clip">
+                    <a href={url} className="mr-5 underline max-w-50 underline-offset-2 wrap-break-word overflow-clip">
                         {url}
-                    </span>
-                    <Button onClick={copyUrl}>
+                    </a>
+                    <Button size="sm" onClick={copyUrl}>
                         <Copy />
                     </Button>
                     <a href={url}>
-                        <Button onClick={copyUrl}>
+                        <Button size="sm" onClick={copyUrl}>
                             <ArrowUpRight />
                         </Button>
                     </a>

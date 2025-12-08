@@ -1,16 +1,18 @@
 import { columns } from '@/components/links-table/columns'
 import { DataTable } from '@/components/links-table/data-table'
-import { Badge } from '@/components/ui/badge'
 import type Link from '@/types/link'
 import { parseLinkList } from '@/types/link'
 import PocketBase from 'pocketbase'
 import { useEffect, useState } from 'react'
 
 import CustomCheckbox from '@/components/custom-ui/checkbox'
+import TagBadge from '@/components/custom-ui/tag-badge'
+import { Button } from '@/components/ui/button'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import type Tag from '@/types/tags'
 import { parseTagList } from '@/types/tags'
-import { Search } from 'lucide-react'
+import { ChevronsUpDown, Search } from 'lucide-react'
 
 const API_URL = import.meta.env.VITE_POCKETBASE_URL
 
@@ -30,6 +32,8 @@ export default function App() {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [totalPages, setTotalPages] = useState<number>(1)
     const [perPage, setPerPage] = useState<number>(25)
+
+    const [tagsOpen, setTagsOpen] = useState<boolean>(false)
 
     useEffect(() => {
         const getData = async () => {
@@ -73,7 +77,7 @@ export default function App() {
 
             // Links
             const linksResult = await pb.collection('links').getList(currentPage, perPage, {
-                expand: 'tags',
+                expand: 'tags,tags.tag_group',
                 filter: filters,
                 sort: 'created',
             })
@@ -86,7 +90,7 @@ export default function App() {
             setLinks(links)
 
             // Tags
-            const tagsResult = await pb.collection('tags').getList(1, 999, {})
+            const tagsResult = await pb.collection('tags').getList(1, 999, { expand: 'tag_group' })
 
             const tags: Tag[] = parseTagList(tagsResult.items)
             tags.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
@@ -98,15 +102,28 @@ export default function App() {
         getData()
     }, [currentPage, perPage, textFilter, nameFilter, descFilter, urlFilter, tagsFilter, forceTagsFilter])
 
+    const onTagClick = (tagId: string) => {
+        if (tagsFilter.includes(tagId)) {
+            setTagsFilter((prev) => {
+                return prev.filter((elem) => elem != tagId)
+            })
+        } else {
+            setTagsFilter((prev) => {
+                if (prev.includes(tagId)) return prev
+                return [...prev, tagId]
+            })
+        }
+    }
+
     return (
         <>
-            <div className="w-7xl flex flex-col gap-10 py-25 justify-center mx-auto">
+            <div className="w-full px-10 flex flex-col gap-10 pt-10 justify-center mx-auto">
                 <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
                     The Bibliotek
                 </h1>
 
-                <div className="flex flex-col gap-5">
-                    <div className="flex flex-row gap-5">
+                <div className="flex flex-col gap-2">
+                    <div className="flex flex-row gap-5 max-w-4xl mx-auto">
                         <InputGroup>
                             <InputGroupInput
                                 value={textFilter}
@@ -148,33 +165,33 @@ export default function App() {
                         onChange={setForceTagsFilter}
                     />
 
-                    <div className="flex flex-row flex-wrap gap-2">
+                    <div className="flex flex-row flex-wrap gap-2 max-h-[10vh] overflow-auto">
                         {tags.map((tag) => {
-                            const onTagClick = () => {
-                                if (tagsFilter.includes(tag.id)) {
-                                    setTagsFilter((prev) => {
-                                        return prev.filter((elem) => elem != tag.id)
-                                    })
-                                } else {
-                                    setTagsFilter((prev) => {
-                                        if (prev.includes(tag.id)) return prev
-                                        return [...prev, tag.id]
-                                    })
-                                }
+                            if (tagsFilter.includes(tag.id)) {
+                                return (
+                                    <TagBadge tag={tag} selected={tagsFilter.includes(tag.id)} onClick={onTagClick} />
+                                )
+                            } else {
+                                return ''
                             }
-
-                            return (
-                                <Badge
-                                    key={tag.id}
-                                    className="cursor-pointer select-none"
-                                    variant={tagsFilter.includes(tag.id) ? 'default' : 'outline'}
-                                    onClick={onTagClick}
-                                >
-                                    {tag.name}
-                                </Badge>
-                            )
                         })}
                     </div>
+
+                    <Collapsible open={tagsOpen} onOpenChange={setTagsOpen} className="w-full flex  flex-col gap-2">
+                        <CollapsibleTrigger asChild>
+                            <Button variant="outline">
+                                <ChevronsUpDown />
+                                <span>Ver etiquetas</span>
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="flex flex-row flex-wrap gap-2">
+                            {tags.map((tag) => {
+                                return (
+                                    <TagBadge tag={tag} selected={tagsFilter.includes(tag.id)} onClick={onTagClick} />
+                                )
+                            })}
+                        </CollapsibleContent>
+                    </Collapsible>
                 </div>
 
                 <div className="flex flex-col gap-5">
