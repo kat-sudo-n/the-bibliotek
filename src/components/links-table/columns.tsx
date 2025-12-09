@@ -20,6 +20,8 @@ export const columns: ColumnDef<Link>[] = [
                 <div className="flex flex-col min-w-75">
                     <div className="flex flex-row gap-2">
                         <span className="font-bold text-lg">{name || ''} </span>
+                    </div>
+                    <div className="flex flex-row gap-1">
                         <Popover>
                             <PopoverTrigger>
                                 <Clock size="1.25rem" />
@@ -32,8 +34,8 @@ export const columns: ColumnDef<Link>[] = [
                             </PopoverTrigger>
                             <PopoverContent>Actualizado: {updatedDate.toLocaleString()}</PopoverContent>
                         </Popover>
+                        <span className="text-wrap" dangerouslySetInnerHTML={{ __html: description }}></span>
                     </div>
-                    <span dangerouslySetInnerHTML={{ __html: description }}></span>
                 </div>
             )
         },

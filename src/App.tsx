@@ -6,6 +6,7 @@ import PocketBase from 'pocketbase'
 import { useEffect, useState } from 'react'
 
 import CustomCheckbox from '@/components/custom-ui/checkbox'
+import TagBadge from '@/components/custom-ui/tag-badge'
 import TagFilter from '@/components/custom-ui/tag-filter'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import {
@@ -125,12 +126,6 @@ export default function App() {
                     <SidebarContent>
                         <SidebarGroup>
                             <div className="flex flex-col gap-5">
-                                <CustomCheckbox
-                                    inputId="filter-tags-or"
-                                    text="Filtrar que contenga todas las etiquetas seleccionadas."
-                                    value={forceTagsFilter}
-                                    onChange={setForceTagsFilter}
-                                />
                                 <TagFilter
                                     tagGroups={tagGroups}
                                     tags={tags}
@@ -144,7 +139,7 @@ export default function App() {
                 </Sidebar>
 
                 <main className="w-full px-20">
-                    <div className="w-full px-5 flex flex-col gap-10 pt-10 justify-center mx-auto">
+                    <div className="w-full px-5 flex flex-col gap-5 pt-10 justify-center mx-auto">
                         <h1 className="text-4xl font-extrabold tracking-tight text-balance">The Bibliotek</h1>
 
                         <div className="flex flex-col gap-2">
@@ -183,6 +178,36 @@ export default function App() {
                                 </InputGroup>
                             </div>
                         </div>
+
+                        {tagsFilter.length > 0 && (
+                            <div className="flex flex-col gap-3">
+                                <h4>Filtrando etiquetas</h4>
+                                <CustomCheckbox
+                                    inputId="filter-tags-or"
+                                    text="Filtrar que contenga todas las etiquetas seleccionadas."
+                                    value={forceTagsFilter}
+                                    onChange={setForceTagsFilter}
+                                />
+                                <div className="flex flex-row gap-2">
+                                    {tags.map((tag) => {
+                                        if (tagsFilter.includes(tag.id)) {
+                                            return (
+                                                <TagBadge
+                                                    key={tag.id}
+                                                    tag={tag}
+                                                    selected={true}
+                                                    onClick={() => {
+                                                        setTagsFilter((prev) => {
+                                                            return prev.filter((elem) => elem != tag.id)
+                                                        })
+                                                    }}
+                                                />
+                                            )
+                                        }
+                                    })}
+                                </div>
+                            </div>
+                        )}
 
                         <div className="flex flex-col gap-5 rounded-lg overflow-hidden">
                             <DataTable
