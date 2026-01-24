@@ -7,6 +7,9 @@ export default interface Link {
     name: string
     description: string
     url: string
+    og_title: string
+    og_description: string
+    og_image: string
     created: Date
     updated: Date
     tags: Tag[]
@@ -28,6 +31,9 @@ export function parseLink(record: RecordModel): Link {
         name: record.name,
         description: record.description,
         url: record.url,
+        og_title: record.og_title,
+        og_description: record.og_description,
+        og_image: record.og_image,
         created: new Date(record.created),
         updated: new Date(record.updated),
         tags: tags,

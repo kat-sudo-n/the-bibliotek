@@ -17,24 +17,29 @@ export const columns: ColumnDef<Link>[] = [
             const updatedDate: string = row.original.updated.toLocaleString()
 
             return (
-                <div className="flex flex-col min-w-75">
-                    <div className="flex flex-row gap-2">
-                        <span className="font-bold text-lg">{name || ''} </span>
+                <div className="flex flex-row min-w-75 gap-5">
+                    <div className="h-full w-30 object-contain overflow-hidden rounded-xl">
+                        <img src={row.original.og_image} className="" />
                     </div>
-                    <div className="flex flex-row gap-1">
-                        <Popover>
-                            <PopoverTrigger>
-                                <Clock size="1.25rem" />
-                            </PopoverTrigger>
-                            <PopoverContent>Creado: {createdDate.toLocaleString()}</PopoverContent>
-                        </Popover>
-                        <Popover>
-                            <PopoverTrigger>
-                                <ClockArrowUp size="1.25rem" />
-                            </PopoverTrigger>
-                            <PopoverContent>Actualizado: {updatedDate.toLocaleString()}</PopoverContent>
-                        </Popover>
-                        <span className="text-wrap" dangerouslySetInnerHTML={{ __html: description }}></span>
+                    <div className="flex flex-col ">
+                        <div className="flex flex-row gap-2">
+                            <span className="font-bold text-lg">{name || ''} </span>
+                        </div>
+                        <div className="flex flex-row gap-1">
+                            <Popover>
+                                <PopoverTrigger>
+                                    <Clock size="1.25rem" />
+                                </PopoverTrigger>
+                                <PopoverContent>Creado: {createdDate.toLocaleString()}</PopoverContent>
+                            </Popover>
+                            <Popover>
+                                <PopoverTrigger>
+                                    <ClockArrowUp size="1.25rem" />
+                                </PopoverTrigger>
+                                <PopoverContent>Actualizado: {updatedDate.toLocaleString()}</PopoverContent>
+                            </Popover>
+                            <span className="text-wrap" dangerouslySetInnerHTML={{ __html: description }}></span>
+                        </div>
                     </div>
                 </div>
             )
