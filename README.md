@@ -10,7 +10,7 @@
 5. Crear el usuario de administrador
 
 ### Instalar la parte web
-1. Instalar [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+1. Instalar [Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 2. Desde la consola, en la carpeta raíz del proyecto, usar el comando `npm install`
 3. Para servir la web en local, utilizar `npm run dev`
 
